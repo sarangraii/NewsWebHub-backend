@@ -10,21 +10,47 @@ from app.services.news_fetcher import news_fetcher
 from pathlib import Path
 import os
 
+# # ✅ CRITICAL: Initialize Firebase FIRST, before anything else
+# try:
+#     import firebase_admin
+#     from firebase_admin import credentials
+    
+#     cred_path = os.getenv("FIREBASE_CREDENTIALS_PATH", "firebase-credentials.json")
+    
+#     if os.path.exists(cred_path):
+#         cred = credentials.Certificate(cred_path)
+#         firebase_admin.initialize_app(cred)
+#         print("✅ Firebase initialized for notifications")
+#     else:
+#         print("⚠️ Firebase credentials not found - notifications disabled")
+# except Exception as e:
+#     print(f"⚠️ Firebase initialization failed: {e}")
+
+
+
 # ✅ CRITICAL: Initialize Firebase FIRST, before anything else
 try:
     import firebase_admin
     from firebase_admin import credentials
-    
-    cred_path = os.getenv("FIREBASE_CREDENTIALS_PATH", "firebase-credentials.json")
-    
-    if os.path.exists(cred_path):
-        cred = credentials.Certificate(cred_path)
+    import json
+    import os
+
+    firebase_json = os.getenv("FIREBASE_CREDENTIALS")  # <- Secret from Render
+
+    if firebase_json:
+        cred = credentials.Certificate(json.loads(firebase_json))
         firebase_admin.initialize_app(cred)
         print("✅ Firebase initialized for notifications")
     else:
         print("⚠️ Firebase credentials not found - notifications disabled")
 except Exception as e:
     print(f"⚠️ Firebase initialization failed: {e}")
+
+
+
+
+
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
