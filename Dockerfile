@@ -28,29 +28,37 @@
 
 # # Run application
 # CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-# Base image
-FROM python:3.13-slim
 
-# Set working directory
-WORKDIR /app
+# ===== Base Image =====
+FROM python:3.12-slim
 
-# Install system dependencies
+# ===== Environment Variables =====
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# ===== Install system dependencies =====
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
+    git \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install
+# ===== Set working directory =====
+WORKDIR /app
+
+# ===== Copy requirements =====
 COPY requirements.txt .
+
+# ===== Install Python dependencies =====
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the app
+# ===== Copy app code =====
 COPY . .
 
-# Expose port
-ENV PORT=10000
-EXPOSE $PORT
+# ===== Expose FastAPI port =====
+EXPOSE 8000
 
-# Start app
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "10000"]
+# ===== Start FastAPI with uvicorn =====
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
