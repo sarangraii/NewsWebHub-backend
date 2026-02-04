@@ -1,0 +1,14 @@
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+# motor==3.3.2
+# pydantic==2.5.0
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+httpx==0.25.1
+APScheduler==3.10.4
+python-multipart==0.0.6
+gtts==2.4.0
+firebase-admin==6.4.0
+motor==3.3.2
+pymongo==4.5.0
+pydantic==1.10.12
